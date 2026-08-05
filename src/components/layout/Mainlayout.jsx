@@ -1,9 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
+import Navbar from '../layout/Navbar.jsx'
+import Footer from "../layout/Footer.jsx";
 
-export default function MainLayout() {
+export default function Mainlayout() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       {/* Navbar */}

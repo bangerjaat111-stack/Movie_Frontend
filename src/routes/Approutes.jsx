@@ -1,22 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import MainLayout from "../layout/Mainlayout";
+import Mainlayout from "../components/layout/Mainlayout.jsx";
 
-import Home from "../pages/Home";
-import Movie from "../pages/Movie";
-import Moviesdetail from "../pages/Moviesdetail";
-import Generes from "../pages/Generes";
-import Search from "../pages/Search";
-import Watchlist from "../pages/Watchlist";
-import Profile from "../pages/Profile";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import Notfound from "../pages/Notfound";
+import Home from "../pages/Home.jsx";
+import Movie from "../pages/Movie.jsx";
+import Moviesdetail from "../pages/Moviesdeatail.jsx";
+import Generes from "../pages/Generes.jsx";
+import Search from "../pages/Search.jsx";
+import Watchlist from "../pages/Watchlist.jsx";
+import Profile from "../pages/Profile.jsx";
+import Login from "../pages/Login.jsx";
+import Signup from "../pages/Signup.jsx";
+import Notfound from "../pages/Notfound.jsx";
 
-const AppRoutes = createBrowserRouter([
+const Approutes = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <Mainlayout />,
     children: [
       {
         index: true,
@@ -65,4 +65,4 @@ const AppRoutes = createBrowserRouter([
   },
 ]);
 
-export default AppRoutes;
+export default Approutes;
