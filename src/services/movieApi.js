@@ -1,40 +1,101 @@
-const BASE_URL = "https://api.themoviedb.org/3";
+import Papa from "papaparse";
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const moviesUrl = "/data/tmdb_5000_movies.csv";
 
-const request = async (endpoint) => {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-      "Content-Type": "application/json",
-    },
-  });
+const parseJSON = (value, fallback = []) => {
+  try {
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+export const getPopularMovies = async () => {
+  const response = await fetch(moviesUrl);
 
   if (!response.ok) {
-    throw new Error("Failed to fetch movie data");
+    throw new Error("Unable to load movie dataset");
   }
 
-  return response.json();
-};
+  const csvText = await response.text();
 
-export const getTrendingMovies = () => {
-  return request("/trending/movie/week");
-};
+  const result = Papa.parse(csvText, {
+    header: true,
+    skipEmptyLines: true,
+  });
 
-export const getPopularMovies = () => {
-  return request("/movie/popular");
-};
+  const movies = result.data
+    .filter((movie) => movie.id && movie.title)
+    .map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      name: movie.title,
 
-export const getTopRatedMovies = () => {
-  return request("/movie/top_rated");
-};
+      overview:
+        movie.overview || "No overview available.",
 
-export const getMovieDetails = (id) => {
-  return request(`/movie/${id}?append_to_response=credits,videos`);
-};
+      release_date:
+        movie.release_date || "N/A",
 
-export const searchMovies = (query) => {
-  return request(
-    `/search/movie?query=${encodeURIComponent(query)}`
+      popularity:
+        Number(movie.popularity) || 0,
+
+      vote_average:
+        Number(movie.vote_average) || 0,
+
+      vote_count:
+        Number(movie.vote_count) || 0,
+
+      runtime:
+        Number(movie.runtime) || 0,
+
+      genres:
+        parseJSON(movie.genres),
+
+      poster_path: null,
+      backdrop_path: null,
+    }));
+
+  movies.sort(
+    (a, b) => b.popularity - a.popularity
   );
+
+  return {
+    results: movies,
+    total_results: movies.length,
+  };
+};
+
+export const searchMovies = async (query) => {
+  const data = await getPopularMovies();
+
+  const searchText = query
+    .toLowerCase()
+    .trim();
+
+  const results = data.results.filter((movie) =>
+    movie.title
+      .toLowerCase()
+      .includes(searchText)
+  );
+
+  return {
+    results,
+    total_results: results.length,
+  };
+};
+
+export const getMovieDetails = async (id) => {
+  const data = await getPopularMovies();
+
+  const movie = data.results.find(
+    (movie) =>
+      String(movie.id) === String(id)
+  );
+
+  if (!movie) {
+    throw new Error("Movie not found");
+  }
+
+  return movie;
 };

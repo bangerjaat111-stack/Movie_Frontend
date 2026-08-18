@@ -1,49 +1,52 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FiStar, FiPlay } from "react-icons/fi";
-
-import { getPosterUrl } from "../../utils/imageUrl";
+import { FiStar } from "react-icons/fi";
 
 export default function MovieCard({ movie }) {
+  const year = movie.release_date
+    ? movie.release_date.substring(0, 4)
+    : "Unknown";
+
   return (
     <Link
       to={`/movie/${movie.id}`}
-      className="group relative block overflow-hidden rounded-xl bg-zinc-900 transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+      className="group block overflow-hidden rounded-xl bg-zinc-900 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/10"
     >
-      <div className="relative aspect-[2/3] overflow-hidden">
+      {/* Poster */}
+      <div className="relative aspect-[2/3] overflow-hidden bg-zinc-800">
 
-        <img
-          src={getPosterUrl(movie.poster_path)}
-          alt={movie.title}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-          loading="lazy"
-        />
+        {/* Placeholder for now */}
+        <div className="flex h-full items-center justify-center">
+          <div className="text-center px-4">
+            <div className="mb-3 text-5xl">🎬</div>
 
-        {/* Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 transition duration-300 group-hover:opacity-100">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white">
-            <FiPlay size={22} fill="currentColor" />
+            <p className="line-clamp-2 text-sm font-semibold text-gray-300">
+              {movie.title || "Unknown Movie"}
+            </p>
           </div>
         </div>
 
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
         {/* Rating */}
-        <div className="absolute left-2 top-2 flex items-center gap-1 rounded-md bg-black/80 px-2 py-1 text-xs font-semibold text-yellow-400">
+        <div className="absolute right-2 top-2 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-xs font-semibold text-yellow-400 backdrop-blur">
           <FiStar size={13} fill="currentColor" />
-          {movie.vote_average?.toFixed(1)}
+
+          {movie.vote_average
+            ? Number(movie.vote_average).toFixed(1)
+            : "N/A"}
         </div>
-      </div>
 
-      <div className="p-3">
-        <h3 className="truncate text-sm font-semibold text-white transition group-hover:text-red-500">
-          {movie.title}
-        </h3>
+        {/* Bottom information */}
+        <div className="absolute bottom-0 left-0 right-0 p-3">
+          <h2 className="line-clamp-2 text-sm font-semibold text-white">
+            {movie.title || "Unknown Movie"}
+          </h2>
 
-        <div className="mt-1 flex items-center justify-between text-xs text-gray-400">
-          <span>
-            {movie.release_date?.slice(0, 4) || "N/A"}
-          </span>
-
-          <span>Movie</span>
+          <p className="mt-1 text-xs text-gray-400">
+            {year}
+          </p>
         </div>
       </div>
     </Link>

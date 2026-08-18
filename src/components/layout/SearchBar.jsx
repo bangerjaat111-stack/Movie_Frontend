@@ -1,30 +1,43 @@
-import { useState } from "react";
-import { IoSearch } from "react-icons/io5";
+import React, { useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchBar() {
-  const [focus, setFocus] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const value = search.trim();
+
+    if (!value) return;
+
+    navigate(`/search?query=${encodeURIComponent(value)}`);
+  };
 
   return (
-    <div
-      className={`flex items-center rounded-full overflow-hidden transition-all duration-500 ${
-        focus
-          ? "w-72 bg-white"
-          : "w-12 bg-white/10"
-      }`}
+    <form
+      onSubmit={handleSearch}
+      className="w-full max-w-sm"
     >
-      <button className="p-3 text-black">
-        <IoSearch />
-      </button>
+      <div className="relative">
 
-      <input
-        type="text"
-        placeholder="Search movies..."
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
-        className={`outline-none bg-transparent text-black transition-all duration-300 ${
-          focus ? "w-full px-2" : "w-0"
-        }`}
-      />
-    </div>
+        <FiSearch
+          size={20}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search movies..."
+          className="w-full rounded-full border border-zinc-700 bg-zinc-900 py-2.5 pl-10 pr-4 text-sm text-white outline-none transition placeholder:text-gray-500 focus:border-red-500"
+        />
+
+      </div>
+    </form>
   );
 }
