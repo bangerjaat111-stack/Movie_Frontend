@@ -1,25 +1,31 @@
-import { Link } from "react-router-dom";
-import { RiMovie2Fill } from "react-icons/ri";
+<Link to="/" className="flex items-center gap-4">
 
-export default function Logo() {
-  return (
-    <Link
-      to="/"
-      className="flex items-center gap-3 group"
-    >
-      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600 via-red-700 to-black flex items-center justify-center shadow-lg shadow-red-600/40 transition duration-300 group-hover:rotate-12 group-hover:scale-110">
-        <RiMovie2Fill className="text-white text-3xl" />
-      </div>
+    <div className="relative">
 
-      <div>
-        <h1 className="text-2xl font-black tracking-[5px] text-white">
-          BANGER
+        <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-red-600 via-red-500 to-red-700 flex items-center justify-center shadow-xl shadow-red-600/50">
+
+            <RiMovie2Fill className="text-white text-4xl"/>
+
+        </div>
+
+        <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-black"></span>
+
+    </div>
+
+    <div>
+
+        <h1 className="text-3xl font-black tracking-[8px] text-white">
+
+            BANGER
+
         </h1>
 
-        <p className="text-xs text-gray-400 tracking-[3px]">
-          MOVIE UNIVERSE
+        <p className="text-xs uppercase tracking-[5px] text-zinc-400">
+
+            Movie Streaming
+
         </p>
-      </div>
-    </Link>
-  );
-}
+
+    </div>
+
+</Link>

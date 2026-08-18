@@ -1,26 +1,20 @@
-import { FaMoon, FaSun } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
 
-export default function ThemeToggle({
-  dark,
-  setDark,
-}) {
+export default function ThemeToggle() {
+  const [dark, setDark] = useState(true);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+
   return (
     <button
       onClick={() => setDark(!dark)}
-      className="relative flex h-11 w-20 items-center rounded-full bg-zinc-800 p-1"
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-white transition hover:bg-red-500"
+      aria-label="Toggle theme"
     >
-      <div
-        className={`absolute h-9 w-9 rounded-full bg-red-600 transition-all duration-500 ${
-          dark
-            ? "translate-x-0"
-            : "translate-x-9"
-        }`}
-      />
-
-      <div className="flex w-full justify-between px-2 text-white z-10">
-        <FaMoon />
-        <FaSun />
-      </div>
+      {dark ? <FiSun size={20} /> : <FiMoon size={20} />}
     </button>
   );
 }
