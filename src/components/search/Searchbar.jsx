@@ -1,36 +1,37 @@
 import React, { useState } from "react";
-import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 
 export default function SearchBar() {
-  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+
   const navigate = useNavigate();
 
-  const handleSearch = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!search.trim()) return;
+    if (!query.trim()) return;
 
-    navigate(`/search?query=${encodeURIComponent(search)}`);
+    navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
   return (
     <form
-      onSubmit={handleSearch}
-      className="flex items-center w-full max-w-sm"
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-md items-center"
     >
       <div className="relative w-full">
         <FiSearch
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-          size={20}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+          size={18}
         />
 
         <input
           type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search movies..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-full bg-zinc-800 border border-zinc-700 py-2.5 pl-10 pr-4 text-sm text-white outline-none transition focus:border-red-500"
+          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2.5 pl-10 pr-4 text-sm text-white outline-none transition focus:border-red-500"
         />
       </div>
     </form>

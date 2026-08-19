@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { FiSearch, FiFilm } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
 
 import MovieGrid from "../components/movie/MovieGrid";
-import { searchMovies } from "../services/movieApi.js";
+import { searchMovies } from "../services/movieApi";
 
 export default function Search() {
   const [searchParams] = useSearchParams();
 
-  const query = searchParams.get("query") || "";
+  const query = searchParams.get("q") || "";
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchSearchResults = async () => {
+    const search = async () => {
       if (!query.trim()) {
         setMovies([]);
         return;
@@ -28,15 +28,15 @@ export default function Search() {
         const data = await searchMovies(query);
 
         setMovies(data.results || []);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         setError("Unable to search movies.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSearchResults();
+    search();
   }, [query]);
 
   return (
@@ -45,7 +45,6 @@ export default function Search() {
 
         {/* Header */}
         <div className="mb-8">
-
           <div className="mb-2 flex items-center gap-2 text-red-500">
             <FiSearch size={20} />
 
@@ -55,7 +54,7 @@ export default function Search() {
           </div>
 
           <h1 className="text-3xl font-bold sm:text-4xl">
-            Search Results
+            Search Movies
           </h1>
 
           {query && (
@@ -66,23 +65,22 @@ export default function Search() {
               </span>
             </p>
           )}
-
         </div>
 
-        {/* Empty Query */}
+        {/* No search */}
         {!query && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-10 text-center">
+          <div className="flex min-h-[400px] flex-col items-center justify-center text-center">
             <FiSearch
-              size={40}
-              className="mx-auto mb-4 text-gray-600"
+              size={60}
+              className="mb-5 text-zinc-700"
             />
 
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-2xl font-bold">
               Search for a movie
             </h2>
 
             <p className="mt-2 text-gray-500">
-              Enter a movie name in the search box above.
+              Enter a movie name in the search bar.
             </p>
           </div>
         )}
@@ -106,10 +104,31 @@ export default function Search() {
           </div>
         )}
 
-        {/* No Results */}
+        {/* Results */}
+        {!loading && !error && query && movies.length > 0 && (
+          <>
+            <div className="mb-5 flex items-center gap-2 text-gray-400">
+              <FiFilm />
+
+              <span>
+                {movies.length} movie
+                {movies.length !== 1 ? "s" : ""} found
+              </span>
+            </div>
+
+            <MovieGrid movies={movies} />
+          </>
+        )}
+
+        {/* No results */}
         {!loading && !error && query && movies.length === 0 && (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-10 text-center">
-            <h2 className="text-xl font-semibold">
+          <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
+            <FiFilm
+              size={55}
+              className="mb-4 text-zinc-700"
+            />
+
+            <h2 className="text-2xl font-bold">
               No movies found
             </h2>
 
@@ -117,11 +136,6 @@ export default function Search() {
               Try searching with another movie name.
             </p>
           </div>
-        )}
-
-        {/* Results */}
-        {!loading && !error && movies.length > 0 && (
-          <MovieGrid movies={movies} />
         )}
 
       </div>

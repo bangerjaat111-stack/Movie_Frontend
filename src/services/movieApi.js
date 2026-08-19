@@ -1,4 +1,5 @@
 import Papa from "papaparse";
+import posterMap from "../data/posterMap";
 
 const moviesUrl = "/data/tmdb_5000_movies.csv";
 
@@ -24,9 +25,14 @@ export const getPopularMovies = async () => {
     skipEmptyLines: true,
   });
 
-  const movies = result.data
-    .filter((movie) => movie.id && movie.title)
-    .map((movie) => ({
+ const movies = result.data
+  .filter((movie) => movie.id && movie.title)
+  .map((movie) => {
+
+    console.log("Movie:", movie.title);
+    console.log("Poster:", posterMap[movie.title]);
+
+    return {
       id: movie.id,
       title: movie.title,
       name: movie.title,
@@ -52,9 +58,12 @@ export const getPopularMovies = async () => {
       genres:
         parseJSON(movie.genres),
 
-      poster_path: null,
+      poster_path:
+        posterMap[movie.title] || null,
+
       backdrop_path: null,
-    }));
+    };
+  });
 
   movies.sort(
     (a, b) => b.popularity - a.popularity
